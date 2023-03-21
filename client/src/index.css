@@ -4,15 +4,15 @@
 
 input[type="text"],
 input[type="password"],
-input[type="email"] {
+input[type="number"],
+input[type="email"],
+textarea {
   @apply w-full border my-2 py-2 px-3 rounded-2xl;
 }
-
 button {
   @apply bg-gray-300;
 }
 button.primary {
-  background-color: #f53850;
+  background-color: #4bb5b0;
   @apply p-2 w-full text-white rounded-2xl;
 }
- 

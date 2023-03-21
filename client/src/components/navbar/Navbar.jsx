@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 
 const Navbar = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <header className="flex  justify-between items-center">
       <div>
@@ -90,7 +90,7 @@ const Navbar = () => {
               />
             </svg>
           </div>
-          {!!user && <span>{user.name}</span>}
+          {!!user && <span>{user?.name}</span>}
         </Link>
       </div>
     </header>
