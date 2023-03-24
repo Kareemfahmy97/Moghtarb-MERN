@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const UserModel = require("./models/User");
-// const PlaceModel = require('.')
+const PlaceModel = require("./models/Place");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -111,19 +111,78 @@ app.post("/upload", photosMiddleWare.array("photos", 100), async (req, res) => {
     fs.renameSync(path, newPath);
     uploadedFiles.push(newPath.replace("uploads\\", ""));
   }
-  // for (let i = 0; i < req.files.length; i++) {
-  //   const { path, originalname } = req.photoFiles[i];
-  //   const parts = originalname.split(".");
-  //   const ext = parts[parts.length - 1];
-  //   fs.renameSync(path, newPath);
-  //   uploadedFiles.push(newPath);
-  // }
 
-  // res.json(uploadedFiles);
   console.log(uploadedFiles);
   res.json(uploadedFiles);
 });
 
-app.post("/places", (req, res) => {});
+app.post("/places", async (req, res) => {
+  const { token } = req.cookies;
+  const { title, address, description, extrainfo, photos, perks } = req.body;
+
+  jwt.verify(token, process.env.jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      res.status(498).json("Not accepted");
+    }
+    const placeDoc = await PlaceModel.create({
+      owner: userData.id,
+      title,
+      address,
+      description,
+      extrainfo,
+      photos,
+      perks,
+    });
+    res.json(placeDoc);
+  });
+});
+app.get("/places", async (req, res) => {
+  const { token } = req.cookies;
+  const userData = isTokenVerified(token);
+  if (userData) {
+    const placesData = await PlaceModel.find({ owner: userData.id });
+    res.json(placesData);
+  } else {
+    res.status(401).json("Not Authorized");
+  }
+});
+app.get("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await PlaceModel.findById(id));
+});
+app.put("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  const { token } = req.cookies;
+  const updatedData = req.body;
+  const userData = isTokenVerified(token);
+
+  if (userData) {
+    const placeDoc = await PlaceModel.findById(id);
+    userData.id === placeDoc.owner.toString() &&
+      placeDoc.set({ ...updatedData });
+
+    await placeDoc.save();
+    res.json("done");
+  } 
+  // Validation for owner
+
+  // res.json(req.body);
+});
+//// If want to convert all tokens to use this functions
+function isTokenVerified(token) {
+  const userData = jwt.verify(
+    token,
+    process.env.jwtSecret,
+    {},
+    (err, userData) => {
+      if (err) {
+        return null;
+      } else {
+        return userData;
+      }
+    }
+  );
+  return userData;
+}
 
 app.listen(4000);

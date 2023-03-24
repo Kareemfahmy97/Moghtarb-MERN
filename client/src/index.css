@@ -9,10 +9,16 @@ input[type="email"],
 textarea {
   @apply w-full border my-2 py-2 px-3 rounded-2xl;
 }
+textarea {
+  height: 9rem;
+}
 button {
   @apply bg-gray-300;
 }
 button.primary {
   background-color: #4bb5b0;
   @apply p-2 w-full text-white rounded-2xl;
+}
+.seconday{
+  color: #f8a547;
 }
