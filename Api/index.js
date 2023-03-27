@@ -118,7 +118,8 @@ app.post("/upload", photosMiddleWare.array("photos", 100), async (req, res) => {
 
 app.post("/places", async (req, res) => {
   const { token } = req.cookies;
-  const { title, address, description, extrainfo, photos, perks } = req.body;
+  const { title, address, description, extrainfo, photos, perks, price } =
+    req.body;
 
   jwt.verify(token, process.env.jwtSecret, {}, async (err, userData) => {
     if (err) {
@@ -132,6 +133,7 @@ app.post("/places", async (req, res) => {
       extrainfo,
       photos,
       perks,
+      price,
     });
     res.json(placeDoc);
   });
@@ -150,6 +152,10 @@ app.get("/places/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await PlaceModel.findById(id));
 });
+app.get("/place/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await PlaceModel.findById(id));
+});
 app.put("/places/:id", async (req, res) => {
   const { id } = req.params;
   const { token } = req.cookies;
@@ -163,7 +169,7 @@ app.put("/places/:id", async (req, res) => {
 
     await placeDoc.save();
     res.json("done");
-  } 
+  }
   // Validation for owner
 
   // res.json(req.body);

@@ -18,6 +18,7 @@ const PlacesForm = () => {
     extrainfo: "",
     photos: [],
     perks: [],
+    price: "",
   };
 
   const [formValues, setFormValues] = useReducer(
@@ -25,12 +26,11 @@ const PlacesForm = () => {
     formInitialValues
   );
 
-  const { title, address, description, extrainfo, photos, perks } = formValues;
+  const { title, address, description, extrainfo, price } = formValues;
   useEffect(() => {
     if (id) {
       axios.get(`/places/${id}`).then((res) => {
         const { data } = res;
-        console.log("data from API", data);
 
         Object.keys(data).forEach(function (key, index) {
           setFormValues({ [key]: data[key] });
@@ -101,6 +101,17 @@ const PlacesForm = () => {
               className="text-sm"
               value={description}
               onChange={handleFormChange}
+            />
+          </label>
+          <label className="text-2xl mt-4 ">
+            Price
+            <input
+              type="number"
+              onChange={handleFormChange}
+              name="price"
+              value={price}
+              className="text-sm"
+              placeholder="Ex: $455"
             />
           </label>
           <Perks onChange={setSelectedPerks} selected={selectedPerks} />

@@ -54,6 +54,7 @@ const PlacesPage = () => {
             return (
               <Link
                 to={`/account/places/${place._id}`}
+                key={place._id}
                 className="flex bg-gray-200 gap-4 m-4 p-4 rounded-2xl"
               >
                 <div className="flex w-32 h-32 shrink-0">

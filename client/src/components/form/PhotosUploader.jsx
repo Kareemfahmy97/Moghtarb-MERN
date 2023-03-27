@@ -4,9 +4,7 @@ const PhotosUploader = ({ addedImgs, onChange }) => {
   const [imgLink, setImgLink] = useState("");
   const allTheRefs = {};
   const elemRef = useRef(null);
-  // function showCardButtons(link) {
-  //   allTheRefs[link].classList.remove("hidden");
-  // }
+
   function toggleCardButtons(link) {
     allTheRefs[link].classList.toggle("hidden");
   }
